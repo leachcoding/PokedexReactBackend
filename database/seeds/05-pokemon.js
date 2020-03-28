@@ -4,10 +4,10 @@ exports.seed = function (knex) {
         return knex('').insert([
           {
             id: 1,
-            name: bulbasaur,
-            img: '',
-            height: 0.7,
-            weight: 6.9,
+            name: 'bulbasaur',
+            img: 'https://img.pokemondb.net/sprites/black-white/anim/normal/bulbasaur.gif',
+            height: 7,
+            weight: 69,
             types: ['poison', 'grass'],
             speed: 45,
             specialAttack: 65,
