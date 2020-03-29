@@ -37,7 +37,7 @@ router.get('/berries/:id', validateBerry, (req, res) => {
   const { id } = req.params;
 
   berriesData
-    .getItemsById(id)
+    .getBerriesById(id)
     .then(berry => {
       res.status(200).json(berry)
     })
