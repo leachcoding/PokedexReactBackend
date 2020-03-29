@@ -71,8 +71,8 @@ exports.up = function(knex) {
     tbl.integer('defense');
     tbl.integer('attack');
     tbl.integer('hp');
-    tbl.specificType('abilities', 'text ARRAY');
-    tbl.specificType('moves', 'text ARRAY');
+    tbl.specificType('abilities', '[]');
+    tbl.specificType('moves', '[]');
     tbl.integer('user_id')
       .unsigned()
       .notNullable()
