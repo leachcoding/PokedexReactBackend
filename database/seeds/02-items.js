@@ -4,10 +4,10 @@ exports.seed = function (knex) {
         return knex('items').insert([
           {
             name: 'timer-ball',
-            id: 10,
-            cost: 1000,
+            pokeid: 10,
+            costAmount: 1000,
             user_id: 1,
-            total_count: cost * count,
+            total_count: 2000,
             count: 2
           }
         ]);

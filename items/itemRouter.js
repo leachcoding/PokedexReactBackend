@@ -121,7 +121,7 @@ async function validateUser(req, res, next) {
     ? res.status(404).json({ message: "User does not exist!" })
     : !item ?
     res.status(404).json({ message: "Item does not exist!" })
-    : !item.name || !item.id || !item.cost || !item.total_count
+    : !item.name || !item.id || !item.costAmount || !item.total_count
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
