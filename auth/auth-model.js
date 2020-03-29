@@ -7,8 +7,6 @@ module.exports={
     userLogin
 }
 
-
-
 // Users
 function getUsers() {
     return db('users')
