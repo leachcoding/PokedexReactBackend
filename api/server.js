@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const authenticate = require('../auth/authenticate-middleware.js');
 const authRouter = require('../auth/auth-router.js');
 
- const berryRouter = require('../berries/berryRouter.js');
+const berryRouter = require('../berries/berryRouter.js');
 const itemRouter = require('../items/itemRouter.js');
 // const machineRouter = require('../machines/machineRouter.js');
 // const pokemonRouter = require('../pokemon/pokemonRouter.js');
