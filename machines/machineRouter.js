@@ -1,14 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const dbUsers = require('../auth/auth-model');
-const classDb = require('./classModel');
-const classesData = require('./classModel');
+const itemDb = require('./itemModel');
+const itemsData = require('./itemModel');
 
+// GET all available items
 
-//GET all available classes
-
-router.get('/classes', (req, res) => {
-    classesData.getClasses()
+router.get('/items', (req, res) => {
+    itemsData.getItems()
         .then( posts =>{
             res.status(200).json(posts);
             console.log(posts);
@@ -18,15 +17,15 @@ router.get('/classes', (req, res) => {
     })
 })
 
-// gets all classes for single user
-router.get('/:id/classes', (req, res) => {
+// gets all items for single user
+router.get('/:id/items', (req, res) => {
 
   const { id } = req.params;
 
-  classesData
-    .getClassesFilter(id)
-    .then(classes => {
-      res.status(200).json(classes)
+  itemsData
+    .getItemsFilter(id)
+    .then(items => {
+      res.status(200).json(items)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -34,14 +33,14 @@ router.get('/:id/classes', (req, res) => {
 });
 
 
-// gets single class
-router.get('/classes/:id', validateClass, (req, res) => {
+// gets single item
+router.get('/items/:id', validateItem, (req, res) => {
   const { id } = req.params;
 
-  classesData
-    .getClassesById(id)
-    .then(issue => {
-      res.status(200).json(issue)
+  itemsData
+    .getItemsById(id)
+    .then(item => {
+      res.status(200).json(item)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -49,57 +48,57 @@ router.get('/classes/:id', validateClass, (req, res) => {
 
 })
 
-// adds class to database with user id
-router.post('/:id/classes/', validateUser, (req, res) => {
+// adds item to database with user id
+router.post('/:id/items/', validateUser, (req, res) => {
 
   const { id } = req.params;
-  const issue = { ...req.body, user_id: id }
+  const item = { ...req.body, user_id: id }
 
-  classesData
-    .addClass(issue)
-    .then(issue => {
-      res.status(200).json(issue)
+  itemsData
+    .addItem(item)
+    .then(item => {
+      res.status(200).json(item)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
     })
 })
 
-// edits single class
-router.put("/classes/:id", validateClass, (req, res) => {
+// edits single item
+router.put("/items/:id", validateItem, (req, res) => {
   const { id } = req.params
   const changes = { ...req.body}
-  classesData.updateClass(id, changes)
-  .then(issue => {
-    console.log(`this is class`, issue)
-    res.status(200).json(issue)
+  itemsData.updateItem(id, changes)
+  .then(item => {
+    console.log(`this is item`, item)
+    res.status(200).json(item)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// edits current_attendees of classes
-router.patch("/classes/:id", validateClass, (req, res) => {
+// edits current_attendees of items
+router.patch("/items/:id", validateItem, (req, res) => {
 
   const { id } = req.params
   const join = req.body;
-  classesData
-    .updateClassSize(id, join)
-  .then(classes=> {
-    res.status(200).json({ message: `Attendees for Class# ${id} Updated Successfully`, classes})
+  itemsData
+    .updateItemCount(id, join)
+  .then(items=> {
+    res.status(200).json({ message: `Count for Item# ${id} Updated Successfully`, items})
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// deletes an issue
-router.delete("/classes/:id", (req, res) => {
+// deletes an item
+router.delete("/items/:id", (req, res) => {
   const { id } = req.params
-  classesData.deleteClass(id)
-  .then(classes => {
-    res.status(200).json(classes)
+  itemsData.deleteItem(id)
+  .then(items => {
+    res.status(200).json(items)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
@@ -111,32 +110,32 @@ router.delete("/classes/:id", (req, res) => {
 // Validation MiddleWare
 
 async function validateUser(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+  // validates all POST requests for new item (not new user)
   const { id } = req.params;
-  const issue = { ...req.body, user_id: id} ;
-  console.log(`validate issue:`, issue)
+  const item = { ...req.body, user_id: id} ;
+  console.log(`validate item:`, item)
 
   const userCheck = await dbUsers.getUserById(id)
 
     !userCheck
     ? res.status(404).json({ message: "User does not exist!" })
-    : !issue ?
-    res.status(404).json({ message: "Class does not exist!" })
-    : !issue.title || !issue.description || !issue.type || !issue.start || !issue.location || !issue.intensity || !issue.max_class
+    : !item ?
+    res.status(404).json({ message: "Item does not exist!" })
+    : !item.name || !item.id || !item.costAmount || !item.total_count
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
 
-async function validateClass(req, res, next) {
+async function validateItem(req, res, next) {
   // validates all POST requests for new ISSUE (not new user)
   const { id } = req.params;
-  const classes = req.body;
-  console.log(`validate class:`, classes)
+  const items = req.body;
+  console.log(`validate item:`, items)
 
-  const issueCheck = await classDb.getClassesById(id)
+  const issueCheck = await itemDb.getItemsById(id)
 
     !issueCheck
-    ? res.status(404).json({ message: "Class does not exist!" })
+    ? res.status(404).json({ message: "Item does not exist!" })
     : next();
 }
 

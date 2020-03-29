@@ -1,14 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const dbUsers = require('../auth/auth-model');
-const classDb = require('./classModel');
-const classesData = require('./classModel');
+const berryDb = require('./berryModel');
+const berriesData = require('./berryModel');
 
-
-//GET all available classes
-
-router.get('/classes', (req, res) => {
-    classesData.getClasses()
+// GET all available berries
+router.get('/berries', (req, res) => {
+    berriesData.getBerries()
         .then( posts =>{
             res.status(200).json(posts);
             console.log(posts);
@@ -18,15 +16,15 @@ router.get('/classes', (req, res) => {
     })
 })
 
-// gets all classes for single user
-router.get('/:id/classes', (req, res) => {
+// gets all berries for single user
+router.get('/:id/berries', (req, res) => {
 
   const { id } = req.params;
 
-  classesData
-    .getClassesFilter(id)
-    .then(classes => {
-      res.status(200).json(classes)
+  berriesData
+    .getBerriesFilter(id)
+    .then(berries => {
+      res.status(200).json(berries)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -34,14 +32,14 @@ router.get('/:id/classes', (req, res) => {
 });
 
 
-// gets single class
-router.get('/classes/:id', validateClass, (req, res) => {
+// gets single berry
+router.get('/berries/:id', validateBerry, (req, res) => {
   const { id } = req.params;
 
-  classesData
-    .getClassesById(id)
-    .then(issue => {
-      res.status(200).json(issue)
+  berriesData
+    .getItemsById(id)
+    .then(berry => {
+      res.status(200).json(berry)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -49,57 +47,57 @@ router.get('/classes/:id', validateClass, (req, res) => {
 
 })
 
-// adds class to database with user id
-router.post('/:id/classes/', validateUser, (req, res) => {
+// adds berry to database with user id
+router.post('/:id/berries/', validateUser, (req, res) => {
 
   const { id } = req.params;
-  const issue = { ...req.body, user_id: id }
+  const berry = { ...req.body, user_id: id }
 
-  classesData
-    .addClass(issue)
-    .then(issue => {
-      res.status(200).json(issue)
+  berriesData
+    .addBerry(berry)
+    .then(berry => {
+      res.status(200).json(berry)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
     })
 })
 
-// edits single class
-router.put("/classes/:id", validateClass, (req, res) => {
+// edits single berry
+router.put("/berries/:id", validateBerry, (req, res) => {
   const { id } = req.params
   const changes = { ...req.body}
-  classesData.updateClass(id, changes)
-  .then(issue => {
-    console.log(`this is class`, issue)
-    res.status(200).json(issue)
+  berriesData.updateBerry(id, changes)
+  .then(berry => {
+    console.log(`this is berry`, berry)
+    res.status(200).json(berry)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// edits current_attendees of classes
-router.patch("/classes/:id", validateClass, (req, res) => {
+// edits count of berries
+router.patch("/berries/:id", validateBerry, (req, res) => {
 
   const { id } = req.params
   const join = req.body;
-  classesData
-    .updateClassSize(id, join)
-  .then(classes=> {
-    res.status(200).json({ message: `Attendees for Class# ${id} Updated Successfully`, classes})
+  berriesData
+    .updateBerryCount(id, join)
+  .then(berries=> {
+    res.status(200).json({ message: `Count for Berry# ${id} Updated Successfully`, berries})
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// deletes an issue
-router.delete("/classes/:id", (req, res) => {
+// deletes an berry
+router.delete("/berries/:id", (req, res) => {
   const { id } = req.params
-  classesData.deleteClass(id)
-  .then(classes => {
-    res.status(200).json(classes)
+  berriesData.deleteBerry(id)
+  .then(berries => {
+    res.status(200).json(berries)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
@@ -111,32 +109,32 @@ router.delete("/classes/:id", (req, res) => {
 // Validation MiddleWare
 
 async function validateUser(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+  // validates all POST requests for new berry (not new user)
   const { id } = req.params;
-  const issue = { ...req.body, user_id: id} ;
-  console.log(`validate issue:`, issue)
+  const berry = { ...req.body, user_id: id} ;
+  console.log(`validate berry:`, berry)
 
   const userCheck = await dbUsers.getUserById(id)
 
     !userCheck
     ? res.status(404).json({ message: "User does not exist!" })
-    : !issue ?
-    res.status(404).json({ message: "Class does not exist!" })
-    : !issue.title || !issue.description || !issue.type || !issue.start || !issue.location || !issue.intensity || !issue.max_class
+    : !berry ?
+    res.status(404).json({ message: "Berry does not exist!" })
+    : !berry.name || !berry.pokeid || !berry.size || !berry.smoothness || !berry.naturalGiftPower || !berry.soilDryness || !berry.growthTime || !berry.maxHarvest
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
 
-async function validateClass(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+async function validateBerry(req, res, next) {
+  // validates all POST requests for new berry (not new user)
   const { id } = req.params;
-  const classes = req.body;
-  console.log(`validate class:`, classes)
+  const berries = req.body;
+  console.log(`validate berry:`, berries)
 
-  const issueCheck = await classDb.getClassesById(id)
+  const issueCheck = await berryDb.getBerriesById(id)
 
     !issueCheck
-    ? res.status(404).json({ message: "Class does not exist!" })
+    ? res.status(404).json({ message: "Berry does not exist!" })
     : next();
 }
 

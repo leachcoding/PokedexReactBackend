@@ -78,7 +78,7 @@ router.put("/items/:id", validateItem, (req, res) => {
   })
 })
 
-// edits current_attendees of items
+// edits count of items
 router.patch("/items/:id", validateItem, (req, res) => {
 
   const { id } = req.params
@@ -121,13 +121,13 @@ async function validateUser(req, res, next) {
     ? res.status(404).json({ message: "User does not exist!" })
     : !item ?
     res.status(404).json({ message: "Item does not exist!" })
-    : !item.name || !item.id || !item.costAmount || !item.total_count
+    : !item.name || !item.pokeid || !item.costAmount || !item.total_count
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
 
 async function validateItem(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+  // validates all POST requests for new item (not new user)
   const { id } = req.params;
   const items = req.body;
   console.log(`validate item:`, items)

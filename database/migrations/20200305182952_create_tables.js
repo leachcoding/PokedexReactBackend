@@ -37,24 +37,25 @@ exports.up = function(knex) {
   //   tbl.string('mega-punch').notNullable();
   // })
   //
-  // .createTable('berries', tbl => {
-  //   tbl.increments();
-  //   tbl.string('name').notNullable();
-  //   tbl.integer('pokeid');
-  //   tbl.integer('user_id')
-  //     .unsigned()
-  //     .notNullable()
-  //     .references('pokeid')
-  //     .inTable('users')
-  //     .onUpdate('CASCADE')
-  //     .onDelete('RESTRICT');
-  //   tbl.integer('size');
-  //   tbl.integer('smoothness');
-  //   tbl.integer('naturalGiftPower');
-  //   tbl.integer('soilDryness');
-  //   tbl.integer('growthTime');
-  //   tbl.integer('maxHarvest');
-  // })
+   .createTable('berries', tbl => {
+     tbl.increments();
+     tbl.string('name').notNullable();
+     tbl.integer('pokeid');
+     tbl.integer('user_id')
+       .unsigned()
+       .notNullable()
+       .references('pokeid')
+       .inTable('users')
+       .onUpdate('CASCADE')
+       .onDelete('RESTRICT');
+     tbl.integer('size');
+     tbl.integer('smoothness');
+     tbl.integer('naturalGiftPower');
+     tbl.integer('soilDryness');
+     tbl.integer('growthTime');
+     tbl.integer('maxHarvest');
+     tbl.integer('count').defaultTo(0);
+   })
   //
   // .createTable('pokemon', tbl => {
   //   tbl.increments();
