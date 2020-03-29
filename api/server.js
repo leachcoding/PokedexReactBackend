@@ -23,7 +23,7 @@ server.get('/', (req, res) => {
 server.use('/api/auth', authRouter); // For the trainer
 
 // server.use('/api/berries', authenticate, berryRouter); // For the berries
-server.use('/api/items', authenticate, itemRouter); // For the items
+server.use('/api/items', itemRouter); // For the items
 // server.use('/api/machines', authenticate, machineRouter); // For the machines
 // server.use('/api/pokemon', authenticate, pokemonRouter); // For the pokemon
 
