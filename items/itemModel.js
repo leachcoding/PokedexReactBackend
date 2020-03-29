@@ -32,11 +32,11 @@ function getItemsById(id) {
 }
 
 async function updateItem(id, changes) {
-  await db('classes')
+  await db('items')
   .where({id})
   .update(changes)
 
-  return getClassesById(id);
+  return getItemsById(id);
 }
 
 async function updateItemCount(id, changes) {

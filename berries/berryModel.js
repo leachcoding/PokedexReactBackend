@@ -1,63 +1,63 @@
 const db = require('../database/dbConfig');
 
 module.exports = {
-    getItems,
-    getItemsById,
-    addItem,
-    getItemFilter,
-    updateItem,
-    deleteItem,
-    updateItemCount
+    getBerries,
+    getBerriesById,
+    addBerry,
+    getBerryFilter,
+    updateBerry,
+    deleteBerry,
+    updateBerryCount
 };
 
-function getItems() {
-  return db('items');
+function getBerries() {
+  return db('berries');
 }
 
-function addItem(post) {
-  return db('items as i')
+function addBerry(post) {
+  return db('berries as i')
     .insert(post)
     .then(ids => {
       console.log('ADD ITEM', ids)
       const [id] = ids;
-      return getItemsById(id);
+      return getBerriesById(id);
     })
 }
 
-function getItemsById(id) {
-  return db('items')
+function getBerriesById(id) {
+  return db('berries')
     .select('*')
     .where({id})
     .first()
 }
 
-async function updateItem(id, changes) {
-  await db('classes')
+async function updateBerry(id, changes) {
+  await db('berries')
   .where({id})
   .update(changes)
 
-  return getClassesById(id);
+  return getBerriesById(id);
 }
 
-async function updateItemCount(id, changes) {
-  await db('items')
+async function updateBerryCount(id, changes) {
+  await db('berries')
   .where({id})
   .update(changes)
 
-  return db('items')
+  return db('berries')
   .select('count')
   .where({id})
   .first()
 }
 
-function deleteItem(id) {
-  return db('items')
+function deleteBerry(id) {
+  return db('berries')
   .where('id', id)
   .delete()
 }
 
-function getItemsFIlter(filter) {
-  return db('items')
+function getBerriesFIlter(filter) {
+  return db('berries')
   .select('*')
   .where('user_id', filter)
 }
