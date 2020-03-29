@@ -66,7 +66,6 @@ exports.up = function(knex) {
     tbl.integer('weight');
     tbl.string('type1').notNullable();
     tbl.string('type2').notNullable();
-    tbl.index(['type1', 'type2'], 'types');
     tbl.integer('speed');
     tbl.integer('specialAttack');
     tbl.integer('specialDefense');
@@ -76,12 +75,10 @@ exports.up = function(knex) {
     tbl.string('abilities1').notNullable();
     tbl.string('abilities2').notNullable();
     tbl.string('abilities3').notNullable();
-    tbl.index(['abilities1', 'abilities2', 'abilities3'], 'abilities');
     tbl.string('moves1').notNullable();
     tbl.string('moves2').notNullable();
     tbl.string('moves3').notNullable();
     tbl.string('moves4').notNullable();
-    tbl.index(['moves1', 'moves2', 'moves3', 'moves4'], 'moves');
     tbl.integer('user_id')
       .unsigned()
       .notNullable()
