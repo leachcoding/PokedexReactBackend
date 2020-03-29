@@ -4,7 +4,7 @@ module.exports = {
     getBerries,
     getBerriesById,
     addBerry,
-    getBerryFilter,
+    getBerriesFilter,
     updateBerry,
     deleteBerry,
     updateBerryCount
@@ -15,10 +15,10 @@ function getBerries() {
 }
 
 function addBerry(post) {
-  return db('berries as i')
+  return db('berries as b')
     .insert(post)
     .then(ids => {
-      console.log('ADD ITEM', ids)
+      console.log('ADD BERRY', ids)
       const [id] = ids;
       return getBerriesById(id);
     })
@@ -56,7 +56,7 @@ function deleteBerry(id) {
   .delete()
 }
 
-function getBerriesFIlter(filter) {
+function getBerriesFilter(filter) {
   return db('berries')
   .select('*')
   .where('user_id', filter)
