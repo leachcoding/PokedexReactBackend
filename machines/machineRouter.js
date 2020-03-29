@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const dbUsers = require('../auth/auth-model');
-const itemDb = require('./itemModel');
-const itemsData = require('./itemModel');
+const machineDb = require('./machineModel');
+const machinesData = require('./machineModel');
 
-// GET all available items
-
-router.get('/items', (req, res) => {
-    itemsData.getItems()
+// GET all available machines
+router.get('/machines', (req, res) => {
+    machinesData.getMachines()
         .then( posts =>{
             res.status(200).json(posts);
             console.log(posts);
@@ -17,15 +16,15 @@ router.get('/items', (req, res) => {
     })
 })
 
-// gets all items for single user
-router.get('/:id/items', (req, res) => {
+// gets all machines for single user
+router.get('/:id/machines', (req, res) => {
 
   const { id } = req.params;
 
-  itemsData
-    .getItemsFilter(id)
-    .then(items => {
-      res.status(200).json(items)
+  machinesData
+    .getMachinesFilter(id)
+    .then(machines => {
+      res.status(200).json(machines)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -33,14 +32,14 @@ router.get('/:id/items', (req, res) => {
 });
 
 
-// gets single item
-router.get('/items/:id', validateItem, (req, res) => {
+// gets single machine
+router.get('/machines/:id', validateMachine, (req, res) => {
   const { id } = req.params;
 
-  itemsData
-    .getItemsById(id)
-    .then(item => {
-      res.status(200).json(item)
+  machinesData
+    .getMachinesById(id)
+    .then(machine => {
+      res.status(200).json(machine)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -48,57 +47,57 @@ router.get('/items/:id', validateItem, (req, res) => {
 
 })
 
-// adds item to database with user id
-router.post('/:id/items/', validateUser, (req, res) => {
+// adds machineto database with user id
+router.post('/:id/machines/', validateUser, (req, res) => {
 
   const { id } = req.params;
-  const item = { ...req.body, user_id: id }
+  const machine = { ...req.body, user_id: id }
 
-  itemsData
-    .addItem(item)
-    .then(item => {
-      res.status(200).json(item)
+  machinesData
+    .addBerry(machine)
+    .then(machine => {
+      res.status(200).json(machine)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
     })
 })
 
-// edits single item
-router.put("/items/:id", validateItem, (req, res) => {
+// edits single machine
+router.put("/machines/:id", validateMachine, (req, res) => {
   const { id } = req.params
   const changes = { ...req.body}
-  itemsData.updateItem(id, changes)
-  .then(item => {
-    console.log(`this is item`, item)
-    res.status(200).json(item)
+  machinesData.updateMachine(id, changes)
+  .then(machine => {
+    console.log(`this is machine`, machine)
+    res.status(200).json(machine)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// edits current_attendees of items
-router.patch("/items/:id", validateItem, (req, res) => {
+// edits count of machines
+router.patch("/machines/:id", validateMachine, (req, res) => {
 
   const { id } = req.params
   const join = req.body;
-  itemsData
-    .updateItemCount(id, join)
-  .then(items=> {
-    res.status(200).json({ message: `Count for Item# ${id} Updated Successfully`, items})
+  machinesData
+    .updateMachineCount(id, join)
+  .then(machines=> {
+    res.status(200).json({ message: `Count for Machine# ${id} Updated Successfully`, machines})
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// deletes an item
-router.delete("/items/:id", (req, res) => {
+// deletes an machine
+router.delete("/machines/:id", (req, res) => {
   const { id } = req.params
-  itemsData.deleteItem(id)
-  .then(items => {
-    res.status(200).json(items)
+  machinesData.deleteMachine(id)
+  .then(machines => {
+    res.status(200).json(machines)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
@@ -110,32 +109,32 @@ router.delete("/items/:id", (req, res) => {
 // Validation MiddleWare
 
 async function validateUser(req, res, next) {
-  // validates all POST requests for new item (not new user)
+  // validates all POST requests for new machine (not new user)
   const { id } = req.params;
-  const item = { ...req.body, user_id: id} ;
-  console.log(`validate item:`, item)
+  const machine = { ...req.body, user_id: id} ;
+  console.log(`validate machine:`, machine)
 
   const userCheck = await dbUsers.getUserById(id)
 
     !userCheck
     ? res.status(404).json({ message: "User does not exist!" })
-    : !item ?
-    res.status(404).json({ message: "Item does not exist!" })
-    : !item.name || !item.id || !item.costAmount || !item.total_count
+    : !machine ?
+    res.status(404).json({ message: "Machine does not exist!" })
+    : !machine.name || !machine.pokeid || !machine.move
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
 
-async function validateItem(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+async function validateMachine(req, res, next) {
+  // validates all POST requests for new machine (not new user)
   const { id } = req.params;
-  const items = req.body;
-  console.log(`validate item:`, items)
+  const machines = req.body;
+  console.log(`validate machine:`, machines)
 
-  const issueCheck = await itemDb.getItemsById(id)
+  const issueCheck = await machineDb.getMachinesById(id)
 
     !issueCheck
-    ? res.status(404).json({ message: "Item does not exist!" })
+    ? res.status(404).json({ message: "Machine does not exist!" })
     : next();
 }
 

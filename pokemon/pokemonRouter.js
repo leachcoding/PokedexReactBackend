@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const dbUsers = require('../auth/auth-model');
-const itemDb = require('./itemModel');
-const itemsData = require('./itemModel');
+const pokemonDb = require('./pokemonModel');
+const pokemonData = require('./pokemonModel');
 
-// GET all available items
-
-router.get('/items', (req, res) => {
-    itemsData.getItems()
+// GET all available pokemon
+router.get('/pokemon', (req, res) => {
+    pokemonData.getPokemon()
         .then( posts =>{
             res.status(200).json(posts);
             console.log(posts);
@@ -17,15 +16,15 @@ router.get('/items', (req, res) => {
     })
 })
 
-// gets all items for single user
-router.get('/:id/items', (req, res) => {
+// gets all pokemon for single userpokemon
+router.get('/:id/pokemon', (req, res) => {
 
   const { id } = req.params;
 
-  itemsData
-    .getItemsFilter(id)
-    .then(items => {
-      res.status(200).json(items)
+  pokemonData
+    .getPokemonFilter(id)
+    .then(pokemon => {
+      res.status(200).json(pokemon)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -33,14 +32,14 @@ router.get('/:id/items', (req, res) => {
 });
 
 
-// gets single item
-router.get('/items/:id', validateItem, (req, res) => {
+// gets single pokemon
+router.get('/pokemon/:id', validatePokemon, (req, res) => {
   const { id } = req.params;
 
-  itemsData
-    .getItemsById(id)
-    .then(item => {
-      res.status(200).json(item)
+  pokemonData
+    .getPokemonById(id)
+    .then(pokemon => {
+      res.status(200).json(pokemon)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
@@ -48,57 +47,42 @@ router.get('/items/:id', validateItem, (req, res) => {
 
 })
 
-// adds item to database with user id
-router.post('/:id/items/', validateUser, (req, res) => {
+// addspokemon to database with user id
+router.post('/:id/pokemon/', validateUser, (req, res) => {
 
   const { id } = req.params;
-  const item = { ...req.body, user_id: id }
+  const pokemon = { ...req.body, user_id: id }
 
-  itemsData
-    .addItem(item)
-    .then(item => {
-      res.status(200).json(item)
+  pokemonData
+    .addPokemon(pokemon)
+    .then(pokemon=> {
+      res.status(200).json(pokemon)
     })
     .catch(({ name, message, code, stack }) => {
       res.status(500).json({ name, message, code, stack })
     })
 })
 
-// edits single item
-router.put("/items/:id", validateItem, (req, res) => {
+// edits single pokemon
+router.put("/pokemon/:id", validatePokemon, (req, res) => {
   const { id } = req.params
   const changes = { ...req.body}
-  itemsData.updateItem(id, changes)
-  .then(item => {
-    console.log(`this is item`, item)
-    res.status(200).json(item)
+  pokemonData.updatePokemon(id, changes)
+  .then(pokemon => {
+    console.log(`this is pokemon`, pokemon)
+    res.status(200).json(pokemon)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
   })
 })
 
-// edits current_attendees of items
-router.patch("/items/:id", validateItem, (req, res) => {
-
+// deletes an pokemon
+router.delete("/pokemon/:id", (req, res) => {
   const { id } = req.params
-  const join = req.body;
-  itemsData
-    .updateItemCount(id, join)
-  .then(items=> {
-    res.status(200).json({ message: `Count for Item# ${id} Updated Successfully`, items})
-  })
-  .catch(({ name, message, code, stack }) => {
-    res.status(500).json({ name, message, code, stack })
-  })
-})
-
-// deletes an item
-router.delete("/items/:id", (req, res) => {
-  const { id } = req.params
-  itemsData.deleteItem(id)
-  .then(items => {
-    res.status(200).json(items)
+  pokemonData.deletePokemon(id)
+  .then(pokemon => {
+    res.status(200).json(pokemon)
   })
   .catch(({ name, message, code, stack }) => {
     res.status(500).json({ name, message, code, stack })
@@ -110,32 +94,32 @@ router.delete("/items/:id", (req, res) => {
 // Validation MiddleWare
 
 async function validateUser(req, res, next) {
-  // validates all POST requests for new item (not new user)
+  // validates all POST requests for new berry (not new user)
   const { id } = req.params;
-  const item = { ...req.body, user_id: id} ;
-  console.log(`validate item:`, item)
+  const pokemon = { ...req.body, user_id: id} ;
+  console.log(`validate pokemon:`, pokemon)
 
   const userCheck = await dbUsers.getUserById(id)
 
     !userCheck
     ? res.status(404).json({ message: "User does not exist!" })
-    : !item ?
-    res.status(404).json({ message: "Item does not exist!" })
-    : !item.name || !item.id || !item.costAmount || !item.total_count
+    : !pokemon ?
+    res.status(404).json({ message: "Berry does not exist!" })
+    : !pokemon.name || !pokemon.pokeid || !pokemon.img || !pokemon.height || !pokemon.weight || !pokemon.types || !pokemon.speed || !pokemon.specialAttack || !pokemon.specialDefense || !pokemon.defense || !pokemon.attack || !pokemon.hp || !pokemon.abilities || !pokemon.moves
     ? res.status(406).json({ message: "Please make sure the required fields are completed. " })
     : next();
 }
 
-async function validateItem(req, res, next) {
-  // validates all POST requests for new ISSUE (not new user)
+async function validatePokemon(req, res, next) {
+  // validates all POST requests for new pokemon (not new user)
   const { id } = req.params;
-  const items = req.body;
-  console.log(`validate item:`, items)
+  const pokemon = req.body;
+  console.log(`validate pokemon:`, pokemon)
 
-  const issueCheck = await itemDb.getItemsById(id)
+  const issueCheck = await pokemonDb.getPokemonById(id)
 
     !issueCheck
-    ? res.status(404).json({ message: "Item does not exist!" })
+    ? res.status(404).json({ message: "Pokemon does not exist!" })
     : next();
 }
 

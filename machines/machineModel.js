@@ -1,63 +1,63 @@
 const db = require('../database/dbConfig');
 
 module.exports = {
-    getItems,
-    getItemsById,
-    addItem,
-    getItemFilter,
-    updateItem,
-    deleteItem,
-    updateItemCount
+    getMachines,
+    getMachinesById,
+    addMachine,
+    getMachinesFilter,
+    updateMachine,
+    deleteMachine,
+    updateMachineCount
 };
 
-function getItems() {
-  return db('items');
+function getMachines() {
+  return db('machines');
 }
 
-function addItem(post) {
-  return db('items as i')
+function addMachine(post) {
+  return db('machines as m')
     .insert(post)
     .then(ids => {
-      console.log('ADD ITEM', ids)
+      console.log('ADD MACHINE', ids)
       const [id] = ids;
-      return getItemsById(id);
+      return getMachinesById(id);
     })
 }
 
-function getItemsById(id) {
-  return db('items')
+function getMachinesById(id) {
+  return db('machines')
     .select('*')
     .where({id})
     .first()
 }
 
-async function updateItem(id, changes) {
-  await db('classes')
+async function updateMachine(id, changes) {
+  await db('machines')
   .where({id})
   .update(changes)
 
-  return getClassesById(id);
+  return getMachinesById(id);
 }
 
-async function updateItemCount(id, changes) {
-  await db('items')
+async function updateMachineCount(id, changes) {
+  await db('machines')
   .where({id})
   .update(changes)
 
-  return db('items')
+  return db('machines')
   .select('count')
   .where({id})
   .first()
 }
 
-function deleteItem(id) {
-  return db('items')
+function deleteMachine(id) {
+  return db('machines')
   .where('id', id)
   .delete()
 }
 
-function getItemsFIlter(filter) {
-  return db('items')
+function getMachinesFilter(filter) {
+  return db('machines')
   .select('*')
   .where('user_id', filter)
 }
