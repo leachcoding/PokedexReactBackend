@@ -22,65 +22,65 @@ exports.up = function(knex) {
     tbl.integer('count').defaultTo(0);
   })
 
-  // .createTable('machines', tbl => {
-  //   tbl.increments();
-  //   tbl.string('name').notNullable();
-  //   tbl.integer('pokeid');
-  //   tbl.integer('user_id')
-  //     .unsigned()
-  //     .notNullable()
-  //     .references('pokeid')
-  //     .inTable('users')
-  //     .onUpdate('CASCADE')
-  //     .onDelete('RESTRICT');
-  //   tbl.integer('count').defaultTo(0);
-  //   tbl.string('mega-punch').notNullable();
-  // })
-  //
-   .createTable('berries', tbl => {
-     tbl.increments();
-     tbl.string('name').notNullable();
-     tbl.integer('pokeid');
-     tbl.integer('user_id')
-       .unsigned()
-       .notNullable()
-       .references('pokeid')
-       .inTable('users')
-       .onUpdate('CASCADE')
-       .onDelete('RESTRICT');
-     tbl.integer('size');
-     tbl.integer('smoothness');
-     tbl.integer('naturalGiftPower');
-     tbl.integer('soilDryness');
-     tbl.integer('growthTime');
-     tbl.integer('maxHarvest');
-     tbl.integer('count').defaultTo(0);
-   })
-  //
-  // .createTable('pokemon', tbl => {
-  //   tbl.increments();
-  //   tbl.integer('pokeid');
-  //   tbl.string('name').notNullable();
-  //   tbl.string('img').notNullable();
-  //   tbl.integer('height');
-  //   tbl.integer('weight');
-  //   tbl.specificType('types', 'text ARRAY');
-  //   tbl.integer('speed');
-  //   tbl.integer('specialAttack');
-  //   tbl.integer('specialDefense');
-  //   tbl.integer('defense');
-  //   tbl.integer('attack');
-  //   tbl.integer('hp');
-  //   tbl.specificType('abilities', 'text ARRAY');
-  //   tbl.specificType('moves', 'text ARRAY');
-  //   tbl.integer('user_id')
-  //     .unsigned()
-  //     .notNullable()
-  //     .references('pokeid')
-  //     .inTable('users')
-  //     .onUpdate('CASCADE')
-  //     .onDelete('RESTRICT');
-  // })
+  .createTable('machines', tbl => {
+    tbl.increments();
+    tbl.string('name').notNullable();
+    tbl.integer('pokeid');
+    tbl.integer('user_id')
+      .unsigned()
+      .notNullable()
+      .references('pokeid')
+      .inTable('users')
+      .onUpdate('CASCADE')
+      .onDelete('RESTRICT');
+    tbl.integer('count').defaultTo(0);
+    tbl.string('move').notNullable();
+  })
+
+  .createTable('berries', tbl => {
+    tbl.increments();
+    tbl.string('name').notNullable();
+    tbl.integer('pokeid');
+    tbl.integer('user_id')
+      .unsigned()
+      .notNullable()
+      .references('pokeid')
+      .inTable('users')
+      .onUpdate('CASCADE')
+      .onDelete('RESTRICT');
+    tbl.integer('size');
+    tbl.integer('smoothness');
+    tbl.integer('naturalGiftPower');
+    tbl.integer('soilDryness');
+    tbl.integer('growthTime');
+    tbl.integer('maxHarvest');
+    tbl.integer('count').defaultTo(0);
+  })
+
+  .createTable('pokemon', tbl => {
+    tbl.increments();
+    tbl.integer('pokeid');
+    tbl.string('name').notNullable();
+    tbl.string('img').notNullable();
+    tbl.integer('height');
+    tbl.integer('weight');
+    tbl.specificType('types', 'text ARRAY');
+    tbl.integer('speed');
+    tbl.integer('specialAttack');
+    tbl.integer('specialDefense');
+    tbl.integer('defense');
+    tbl.integer('attack');
+    tbl.integer('hp');
+    tbl.specificType('abilities', 'text ARRAY');
+    tbl.specificType('moves', 'text ARRAY');
+    tbl.integer('user_id')
+      .unsigned()
+      .notNullable()
+      .references('pokeid')
+      .inTable('users')
+      .onUpdate('CASCADE')
+      .onDelete('RESTRICT');
+  })
 };
 
 exports.down = function(knex) {

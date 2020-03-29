@@ -1,63 +1,51 @@
 const db = require('../database/dbConfig');
 
 module.exports = {
-    getItems,
-    getItemsById,
-    addItem,
-    getItemFilter,
-    updateItem,
-    deleteItem,
-    updateItemCount
+    getPokemon,
+    getPokemonById,
+    addPokemon,
+    getPokemonFilter,
+    updatePokemon,
+    deletePokemon
 };
 
-function getItems() {
-  return db('items');
+function getPokemon() {
+  return db('pokemon');
 }
 
-function addItem(post) {
-  return db('items as i')
+function addPokemon(post) {
+  return db('pokemon as p')
     .insert(post)
     .then(ids => {
-      console.log('ADD ITEM', ids)
+      console.log('ADD Pokemon', ids)
       const [id] = ids;
-      return getItemsById(id);
+      return getPokemonById(id);
     })
 }
 
-function getItemsById(id) {
-  return db('items')
+function getPokemonById(id) {
+  return db('pokemon')
     .select('*')
     .where({id})
     .first()
 }
 
-async function updateItem(id, changes) {
-  await db('classes')
+async function updatePokemon(id, changes) {
+  await db('pokemon')
   .where({id})
   .update(changes)
 
-  return getClassesById(id);
+  return getPokemonById(id);
 }
 
-async function updateItemCount(id, changes) {
-  await db('items')
-  .where({id})
-  .update(changes)
-
-  return db('items')
-  .select('count')
-  .where({id})
-  .first()
-}
-
-function deleteItem(id) {
-  return db('items')
+function deletePokemon(id) {
+  return db('pokemon')
   .where('id', id)
   .delete()
 }
 
-function getItemsFIlter(filter) {
-  return db('items')
+function getPokemonFilter(filter) {
+  return db('pokemon')
   .select('*')
   .where('user_id', filter)
 }
