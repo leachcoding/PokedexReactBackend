@@ -15,8 +15,13 @@
              defense: 45,
              attack: 49,
              hp: 45,
-             abilities: ['chlorophyll', 'overgrow'],
-             moves: ['razor-wind', 'swords-dance', 'cut', 'bind'],
+             abilities1: 'chlorophyll',
+             abilities2: 'overgrow',
+             abilities3: '',
+             moves1: 'razor-wind',
+             moves2: 'swords-dance',
+             moves3: 'cut',
+             moves4: 'bind',
              user_id: 1
            }
          ]);
