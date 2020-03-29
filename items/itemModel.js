@@ -4,7 +4,7 @@ module.exports = {
     getItems,
     getItemsById,
     addItem,
-    getItemFilter,
+    getItemsFilter,
     updateItem,
     deleteItem,
     updateItemCount
@@ -56,7 +56,7 @@ function deleteItem(id) {
   .delete()
 }
 
-function getItemsFIlter(filter) {
+function getItemsFilter(filter) {
   return db('items')
   .select('*')
   .where('user_id', filter)
