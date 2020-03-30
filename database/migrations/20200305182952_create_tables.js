@@ -19,7 +19,7 @@ exports.up = function(knex) {
       .onUpdate('CASCADE')
       .onDelete('RESTRICT');
     tbl.integer('total_count');
-    tbl.integer('count').defaultTo(0);
+    tbl.integer('count').defaultTo(1);
   })
 
   .createTable('machines', tbl => {
@@ -33,7 +33,7 @@ exports.up = function(knex) {
       .inTable('users')
       .onUpdate('CASCADE')
       .onDelete('RESTRICT');
-    tbl.integer('count').defaultTo(0);
+    tbl.integer('count').defaultTo(1);
     tbl.string('move').notNullable();
   })
 
@@ -54,7 +54,7 @@ exports.up = function(knex) {
     tbl.integer('soilDryness');
     tbl.integer('growthTime');
     tbl.integer('maxHarvest');
-    tbl.integer('count').defaultTo(0);
+    tbl.integer('count').defaultTo(1);
   })
 
   .createTable('pokemon', tbl => {
