@@ -21,7 +21,7 @@
   "homepage": "https://github.com/leachcoding/PokedexReactBackend#readme",
   "dependencies": {
     "axios": "^0.19.2",
-    "bcrypt": "^4.0.0",
+    "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "cross-env": "^7.0.0",
